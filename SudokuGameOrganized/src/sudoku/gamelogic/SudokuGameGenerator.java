@@ -10,20 +10,21 @@ import sudoku.problemdomain.Coordinate;
 import sudoku.problemdomain.SudokuGame;
 
 public class SudokuGameGenerator {
+	
 
 	public static SudokuGame generateNewSudokuGame (Difficulty d) {
 
 		int[][] grid;
 
-
+		// Populate the grid with number of random integers between 1 - 9 at random coordinates 10 times
+		// Then get the solution for it
 		do {
 			grid = new int[SudokuGame.GRID_SIZE][SudokuGame.GRID_SIZE];
-			fillSudokuGame(grid,d.difficulty);
-		} while (!SudokuGameSolution.getSolution(SudokuUtilities.copyOf(grid)));
-		// Populate the grid with number of random integers between 1 - 9 at random coordinates based on the difficulty value
+			fillSudokuGame(grid,5);
+		} while (!SudokuGameSolution.getSolution(grid));
 		
-		
-		
+		// Remove text from x number of textFields
+		removeFromCompleteSudokuGame(grid,d.difficulty);
 		
 		// Test i.e. print the grid created
 		/*
@@ -61,5 +62,23 @@ public class SudokuGameGenerator {
 				//System.out.println("at "+tempCoordinate.getCol() + ", " + tempCoordinate.getRow() + " add " + newRandomNumber);
 			}
 		}
+	}
+	
+	public static void removeFromCompleteSudokuGame(int[][] grid,int difficulty) {
+		Random myRandom = new Random();
+		ArrayList<Coordinate> coordinateRemoved = new ArrayList<Coordinate>();
+		int testCount = 0;
+		while (difficulty>0) {
+			int x = myRandom.nextInt(9);
+			int y = myRandom.nextInt(9);
+			Coordinate tempCoordinate = new Coordinate(x,y);
+			// Check if we have already generated random number for this randomly generated coordinate
+			if ((! coordinateRemoved.contains(tempCoordinate))&&(grid[x][y]!=0)) {
+				grid[x][y] = 0;
+				difficulty--;
+				testCount++;
+			}
+		}
+		System.out.println("Removed " + testCount + " fields");
 	}
 }
